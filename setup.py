@@ -13,7 +13,7 @@ setup(
                 'tornado',
                 'sqlalchemy', 
                 'redis'],
-        description = '如何使用tornado开发api后台',
+        description = '使用tornado开发api后台的例子',
         url = 'https://github.com/zhouxianggen/tornado_api_demo.git', 
         author = 'zhouxianggen',
         author_email = 'zhouxianggen@gmail.com',
