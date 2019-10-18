@@ -3,18 +3,19 @@ import os
 import re
 from importlib.util import spec_from_loader,module_from_spec
 from importlib.machinery import SourceFileLoader
-from tornado_api_demo.base import BaseObject, BaseError
+from tornado_api_demo.errors import ApiError
+from tornado_api_demo.util import get_logger
 
 
-class Factory(BaseObject):
+class Factory(object):
     def __init__(self):
-        BaseObject.__init__(self)
+        self.log = get_logger('Factory')
         self.impls = {}
 
 
     def init(self):
         cwd = os.path.dirname(os.path.abspath(__file__))
-        reo = re.compile(r'(version_(\w+))$', re.I)
+        reo = re.compile(r'(v(\w+))$', re.I)
         for sub in os.listdir(cwd):
             subdir = os.path.join(cwd, sub)
             if not os.path.isdir(subdir):
@@ -27,7 +28,7 @@ class Factory(BaseObject):
             if not os.path.isfile(mfile):
                 continue
             self.log.info('load model impl {}'.format(version))
-            name = 'model_{}.py'.format(version)
+            name = 'v{}.py'.format(version)
             loader = SourceFileLoader(name, mfile)
             spec = spec_from_loader(loader.name, loader)
             mod = module_from_spec(spec)
@@ -37,6 +38,6 @@ class Factory(BaseObject):
 
     def gen(self, version):
         if version not in self.impls:
-            raise BaseError('请更新版本')
+            raise ApiError('version {} not implemented'.format(version))
         return self.impls[version]()
 

@@ -2,13 +2,11 @@
 import time
 from functools import wraps
 from redis import StrictRedis
-from tornado_api_demo.base import BaseObject 
 
 
-class PyRedis(BaseObject):
+class PyRedis(object):
     def __init__(self, host, port=6379, pswd='', db=1, version='', 
             retry_interval=60):
-        BaseObject.__init__(self)
         self.version = version
         self.redis = StrictRedis(host=host, port=port, password=pswd, db=db)
         self.retry_interval = retry_interval
@@ -23,13 +21,11 @@ class PyRedis(BaseObject):
 
     def try_connect(self):
         try:
-            self.log.debug('try connect redis server')
             self.last_try = time.time()
             self.redis.ping()
             self.status = 'OK'
         except Exception as e:
             self.status = 'GONE'
-            self.log.exception(e)
 
 
     def retry(func):
@@ -44,7 +40,6 @@ class PyRedis(BaseObject):
                 return func(*args, **kwargs)
             except Exception as e:
                 self.status = 'GONE'
-                self.log.exception(e)
         return wrapper
 
 

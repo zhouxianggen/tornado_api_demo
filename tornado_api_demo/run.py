@@ -5,7 +5,8 @@ from argparse import ArgumentParser
 from tornado.ioloop import IOLoop
 from tornado.httpserver import HTTPServer
 from tornado.web import Application, RequestHandler
-from tornado_api_demo.base import BaseError, get_logger, get_uuid
+from tornado_api_demo.errors import ApiError
+from tornado_api_demo.util get_logger, get_uuid
 from tornado_api_demo.context import g_ctx
 
 
@@ -51,7 +52,7 @@ class ApiRequestHandler(RequestHandler):
         model.log = req.log
         impl = getattr(model, api, None)
         if not impl:
-            raise BaseError('api not implemented')
+            raise ApiError('api not implemented')
         try:
             # 生成数据库session
             req.session = g_ctx.mksession(model.conn)

@@ -2,16 +2,13 @@
 from configparser import ConfigParser
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from tornado_api_demo.base import BaseObject, BaseError 
+from tornado_api_demo.errors import ApiError 
 from tornado_api_demo.model.factory import Factory
 from tornado_api_demo.pyredis import PyRedis
 
 
-class Context(BaseObject):
-    def __init__(self):
-        BaseObject.__init__(self)
-        self.factory = Factory()
-
+class Context(object):
+    """全局上下文"""
 
     def init(self, config):
         self.cfg = ConfigParser()
@@ -26,12 +23,13 @@ class Context(BaseObject):
                 host=self.cfg.get('redis', 'host'), 
                 pswd=self.cfg.get('redis', 'pswd'), 
                 db=self.cfg.getint('redis', 'db'))
+        self.factory = Factory()
         self.factory.init()
 
 
     def mksession(self, conn):
         if conn not in self.Sessions:
-            raise BaseError('数据库不存在')
+            raise ApiError('数据库不存在')
         return self.Sessions[conn]()
 
 
