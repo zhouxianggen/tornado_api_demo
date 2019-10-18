@@ -22,3 +22,5 @@ tornado_api_demo
 | model/factory.py | 数据模型工厂 |
 | model/v* | 某个版本的数据模型 |
 
+> 该框架适合io处理较多的请求，如果是逻辑处理较多，可以考虑用其它框架，例如falco + gunicorn。
+
