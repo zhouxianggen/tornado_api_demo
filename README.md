@@ -1,7 +1,7 @@
 tornado_api_demo
 ![](https://img.shields.io/badge/python%20-%203.7-brightgreen.svg)
 ========
-> 使用tornado开发api后台的例子，该框架适合处理io处理较多的请求，如果面对逻辑处理较多的请求，可以考虑用其它方案，例如falco + gunicorn。
+> 使用tornado开发api后台的例子，该框架适合处理io操作较多的请求，如果是逻辑操作较多的请求，可考虑用其它方案，例如falco + gunicorn。
 
 一个使用tornado, sqlalchemy, redis开发api后台的例子:
 
