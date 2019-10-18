@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import traceback
 import concurrent
 from time import monotonic as now
 from argparse import ArgumentParser
@@ -6,7 +7,7 @@ from tornado.ioloop import IOLoop
 from tornado.httpserver import HTTPServer
 from tornado.web import Application, RequestHandler
 from tornado_api_demo.errors import ApiError
-from tornado_api_demo.util get_logger, get_uuid
+from tornado_api_demo.util import get_logger, get_uuid
 from tornado_api_demo.context import g_ctx
 
 
@@ -39,8 +40,10 @@ class ApiRequestHandler(RequestHandler):
             resp = await IOLoop.current().run_in_executor(
                     self.executor, self.process_request, api)
             self.finish({'status': 20000,  'data': resp})
+        except ApiError as e:
+            self.finish({'status': 50000, 'error': e.error})
         except Exception as e:
-            self.finish({'status': 50000, 'error': str(e)})
+            self.finish({'status': 50000, 'error': traceback.format_exc()})
 
 
     def process_request(self, api):
@@ -52,7 +55,7 @@ class ApiRequestHandler(RequestHandler):
         model.log = req.log
         impl = getattr(model, api, None)
         if not impl:
-            raise ApiError('api not implemented')
+            raise ApiError('api {} not implemented'.format(api))
         try:
             # 生成数据库session
             req.session = g_ctx.mksession(model.conn)

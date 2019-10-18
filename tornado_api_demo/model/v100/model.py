@@ -1,11 +1,11 @@
 # coding: utf8 
 from tornado_api_demo.context import g_ctx
-from tornado_api_demo.base import (BaseObject, BaseError, get_uuid, use_cache, 
-        del_cache)
-from tornado_api_demo.model.version_100.entity import User, jsonify 
+from tornado_api_demo.errors import ApiError
+from tornado_api_demo.util import get_uuid, use_cache, del_cache
+from tornado_api_demo.model.v100.entity import User, jsonify 
 
 
-class Model(BaseObject):
+class Model(object):
     conn = 'test'
 
     @use_cache(g_ctx.cache, 'user', ['user_id'], ex=5)
@@ -13,7 +13,7 @@ class Model(BaseObject):
         user_id = req.params['user_id']
         user = req.session.query(User).filter(User.uuid==user_id).first()
         if not user:
-            raise BaseError('用户不存在')
+            raise ApiError('用户不存在')
         return {'user': jsonify(user)}
 
 
@@ -30,7 +30,7 @@ class Model(BaseObject):
         user_id = req.params['user_id']
         user = req.session.query(User).filter(User.uuid==user_id).first()
         if not user:
-            raise BaseError('用户不存在')
+            raise ApiError('用户不存在')
         user.nickname = req.params['nickname']
         return {'user': jsonify(user)}
 
