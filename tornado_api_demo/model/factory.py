@@ -8,6 +8,10 @@ from tornado_api_demo.util import get_logger
 
 
 class Factory(object):
+    """ 加载当前文件夹下各个数据模型版本(v*), 
+    根据客户端请求版本生成对应的数据模型实例
+    """
+
     def __init__(self):
         self.log = get_logger('Factory')
         self.impls = {}
