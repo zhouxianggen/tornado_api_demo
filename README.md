@@ -3,7 +3,7 @@ tornado_api_demo
 ========
 > 使用tornado开发api后台的例子
 
-演示如何基于tornado, sqlalchemy, redis开发一个api后台:
+一个使用tornado, sqlalchemy, redis开发api后台的例子:
 
 1. 利用concurrent和ThreadPoolExecutor满足一定的并发需求
 2. 按版本动态匹配数据模型，使版本迭代更新不影响旧版本
